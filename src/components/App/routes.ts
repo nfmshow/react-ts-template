@@ -1,6 +1,4 @@
 import { ComponentType } from "react";
-import { dispatch } from "@redux/store";
-import { RATypes, RAMiscData } from "@redux/actions";
 import { onFirstPageMount } from "@utils/history";
 import { PageIds } from "@pages/index";
 

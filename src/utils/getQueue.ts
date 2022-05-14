@@ -66,7 +66,7 @@ export default function getQueue(): Queue {
 			let status: TaskResultStatus = TaskResultStatus.SUCCESS;
 			let error: any = null, result: any = null;
 			try {
-				result = await Promise.resolve(task.apply(context, args));
+				result = await Promise.resolve(task.apply(context, args || []));
 			} catch(err) {
 				error = err;
 				if (typeof(taskDetails.onTaskEnd) !== "function") {

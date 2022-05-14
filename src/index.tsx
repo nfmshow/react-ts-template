@@ -1,5 +1,6 @@
 import * as React from "react";
 import { render } from "preact";
+import "./css/icomoon.css";
 import "./css/main.css";
 import App from "@components/App";
 

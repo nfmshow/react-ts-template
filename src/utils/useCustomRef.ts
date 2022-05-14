@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export interface RefType<RefObjectType> {
 	current: null | RefObjectType;

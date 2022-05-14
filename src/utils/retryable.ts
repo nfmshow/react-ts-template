@@ -67,7 +67,7 @@ export default function retryable<TaskReturnType>(params: RetryableTaskOptions<T
 		const startTime: number = Date.now();
 		function ensureMinDuration(): Promise<void> {
 			const duration = Date.now() - startTime;
-			return new Promise(function(resolve: AnyFunction) {
+			return new Promise<void>(function(resolve: AnyFunction) {
 				if (duration >= minDuration) {
 					resolve();
 					return;
@@ -117,5 +117,5 @@ export default function retryable<TaskReturnType>(params: RetryableTaskOptions<T
 					});
 			});
 	}
-	return new Promise((resolve: AnyFunction, reject: AnyFunction) => makeAttempt(resolve, reject));
+	return new Promise<TaskReturnType>((resolve, reject) => makeAttempt(resolve, reject));
 }

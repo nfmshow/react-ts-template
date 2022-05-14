@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+a:focus,
+a:visited,
+a:active {
+	outline: none;
+}
+
+input,
+textarea,
+button,
+select,
+a {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 /* Left to Right */
 .move-ltr-enter {
 	transform: translateX(-100%);
@@ -56,6 +70,17 @@
 	100% {
 		transform: scale(35);
 		opacity: 0;
+	}
+}
+
+@keyframes bounce-small {
+	0%, 100% {
+		transform: translateY(-10%);
+		animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+	}
+	50% {
+		transform: translateY(0);
+		animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	}
 }
 

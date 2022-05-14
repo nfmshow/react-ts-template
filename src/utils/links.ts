@@ -114,9 +114,9 @@ export async function onLinkClick(e: MouseEvent<HTMLElement> | Link): Promise<vo
 			throw "onLinkClick: Any external link supplied must include a fully qualified domain name with the protocol";
 		}
 		if ((typeof(e.newTab) !== "undefined") || e.newTab) {
-			const link: HTMLAnchorElement = document.createElement('a');
-			link.setAttribute('href', e.extURL);
-			link.setAttribute('target', '_blank');
+			const link: HTMLAnchorElement = document.createElement("a");
+			link.setAttribute("href", e.extURL);
+			link.setAttribute("target", "_blank");
 			link.click();
 			return;
 		}
@@ -154,7 +154,7 @@ export async function onLinkClick(e: MouseEvent<HTMLElement> | Link): Promise<vo
 	try {
 		linkDataP = JSON.parse(linkData);
 	} catch(error) {
-		throw `onLinkClick: Failed to parse "data-link" attribute of element`;
+		throw "onLinkClick: Failed to parse \"data-link\" attribute of element";
 	}
 	const pageId: string = linkDataP.pageId!;
 	if (!isPageId(pageId)) {

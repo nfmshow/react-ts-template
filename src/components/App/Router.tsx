@@ -3,20 +3,23 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { connect, ConnectedProps } from "react-redux";
 import { unstable_HistoryRouter as HistoryRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import RTLoader from "@components/basic/RTLoader";
-import { pages, Page, PageIds }  from "./routes";
+import { pages, Page }  from "./routes";
 import runtimeVars, { Location } from "@utils/runtimeVars";
 import history from "@utils/history";
 import usePrevious from "@utils/usePrevious";
-import navigateTo from "@utils/navigateTo";
 import { initialMiscData, StateTree } from "@redux/initialState";
 import { PAGE_ANIM_DURATION } from "@constants/index";
 
 interface RouterBodyExtProps {
+	
+}
+
+interface RouterBodyReduxProps {
 	animDirection: string;
 	animEnabled: boolean;
 }
 
-function mapStateToProps(state: StateTree): RouterBodyExtProps {
+function mapStateToProps(state: StateTree): RouterBodyReduxProps {
 	const { misc: { pageAnimDirection: animDirection, pageAnimEnabled: animEnabled } } = state;
 	return {
 		animDirection: (typeof(animDirection) === "undefined") ? initialMiscData.pageAnimDirection : animDirection,
@@ -61,14 +64,6 @@ const RouterBody: ComponentType<RouterBodyProps> = function(props: RouterBodyPro
 			setLocationKeys([location.key].concat(locationKeys));
 		}
 	}, [location.key]);
-	useEffect(function() {
-		setTimeout(function() {
-			navigateTo("/test", PageIds.TEST);
-		}, 4000);
-		setTimeout(function() {
-			navigateTo("/sfg", PageIds.NOT_FOUND);
-		}, 8000);
-	}, []);
 	return (
 		<TransitionGroup component={null}>
 			<CSSTransition /* @ts-expect-error Type 'Element' is not assignable to type 'TransitionChildren' */ key={animKeyRef.current} classNames={`move-${(animDirection === "FORWARD") ? "ltr" : "rtl"}`} timeout={PAGE_ANIM_DURATION}>

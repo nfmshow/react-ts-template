@@ -31,8 +31,12 @@ module.exports = {
 			fontFamily: {
 				nunito: ['Nunito', 'sans-serif'],
 				icomoon: ['Icomoon']
+			},
+			animation: {
+				'bounce-small': 'bounce-small 1s infinite'
 			}
 		}
 	},
 	plugins: [],
 };
+

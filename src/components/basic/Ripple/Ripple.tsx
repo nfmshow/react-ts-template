@@ -21,14 +21,16 @@ interface Coords {
 	y: number;
 }
 
-const Ripple: FunctionComponent<RippleProps> = function(props: RippleProps, ref) {
+const Ripple: FunctionComponent<RippleProps> = function(props: RippleProps) {
 	const { element, children } = props;
 	const [ coords, setCoords ] = useState<Coords>({ x: -1, y: -1 });
-	const twccBg: string = (typeof(props.twccBg) === "undefined") ? "bg-gray-200" : props.twccBg;
+	const twccBg: string = (typeof(props.twccBg) === "undefined") ? "bg-gray-200/[.03]" : props.twccBg;
 	const rippleSizeScale: number = (typeof(props.scale) === "undefined") ? 1 : props.scale;
 	const rippleStyle: Record<string, string> = {
 		width: `${rippleSizeScale*20}px`,
 		height: `${rippleSizeScale*20}px`,
+		left: `${coords.x}px`,
+		top: `${coords.y}px`,
 		opacity: "1",
 		animation: "0.9s ease 1 forwards ripple-effect"
 	};
@@ -63,6 +65,6 @@ const Ripple: FunctionComponent<RippleProps> = function(props: RippleProps, ref)
 			</AnyElement>
 		</AnyElement>
 	);
-}
+};
 
 export default Ripple;
