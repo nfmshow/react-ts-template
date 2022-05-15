@@ -1,9 +1,8 @@
-import React, { Component, ComponentType, ReactNode, useEffect, useState, useRef } from "react";
+import React, { Component, ComponentType } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { StateTree } from "@redux/initialState";
 import getWindowSize, { WindowSize } from "@utils/getWindowSize";
 import getQueue, { Queue } from "@utils/getQueue";
-import useCreatorRef from "@utils/useCreatorRef";
 import wait from "@utils/wait";
 import { MODAL_ANIM_DURATION } from "@constants/index";
 
@@ -79,7 +78,7 @@ function getModalAnimStyles(modalOptions: ModalOptions, windowSize: WindowSize):
 			all: { transition: `transform ${MODAL_ANIM_DURATION}ms ease-in` },
 			start: { transform: `translateX(${distance})` },
 			end: { transform: "translateX(0)" }
-		}
+		};
 	}
 	if (anim === ModalEnterAnim.SLIDE_LEFT) {
 		let horzAlign: ModalHorzAlign = ModalHorzAlign.CENTER;
@@ -96,7 +95,7 @@ function getModalAnimStyles(modalOptions: ModalOptions, windowSize: WindowSize):
 			all: { transition: `transform ${MODAL_ANIM_DURATION}ms ease-in` },
 			start: { transform: `translateX(${distance})` },
 			end: { transform: "translateX(0)" }
-		}
+		};
 	}
 	if (anim === ModalEnterAnim.SLIDE_UP) {
 		let vertAlign: ModalVertAlign = ModalVertAlign.CENTER;
@@ -113,7 +112,7 @@ function getModalAnimStyles(modalOptions: ModalOptions, windowSize: WindowSize):
 			all: { transition: `transform ${MODAL_ANIM_DURATION}ms ease-in` },
 			start: { transform: `translateY(${distance})` },
 			end: { transform: "translateY(0)" }
-		}
+		};
 	}
 	if (anim === ModalEnterAnim.SLIDE_DOWN) {
 		let vertAlign: ModalVertAlign = ModalVertAlign.CENTER;
@@ -130,20 +129,20 @@ function getModalAnimStyles(modalOptions: ModalOptions, windowSize: WindowSize):
 			all: { transition: `transform ${MODAL_ANIM_DURATION}ms ease-in` },
 			start: { transform: `translateY(${distance})` },
 			end: { transform: "translateY(0)" }
-		}
+		};
 	}
 	if (anim === ModalEnterAnim.OPACITY) {
 		return {
 			all: { transition: `opacity ${MODAL_ANIM_DURATION}ms ease-in` },
 			start: { opacity: "0" },
 			end: { opacity: "1" }
-		}
+		};
 	}
 	return {
 		all: { transition: `transform ${MODAL_ANIM_DURATION}ms ease-in` },
 		start: { transform: "scale(0)" },
 		end: { transform: "scale(1)" }
-	}
+	};
 }
 
 function getBaseContainerClasses(modalOptions: ModalOptions, mobileView: boolean): string {
@@ -260,7 +259,7 @@ class ModalRoot extends Component<ModalRootProps, ModalRootState> {
 	};
 	
 	closeModalTask: ((modalId: string) => Promise<void>) = async (modalId) => {
-		await new Promise<void>((resolve, reject) => {
+		await new Promise<void>((resolve) => {
 			this.setState((prevState: ModalRootState): ModalRootState => {
 				const modals: Modal[] = prevState.modals.map((modal: Modal): Modal => {
 					if (modal.modalId !== modalId) {
@@ -279,7 +278,17 @@ class ModalRoot extends Component<ModalRootProps, ModalRootState> {
 		await new Promise<void>((resolve) => {
 			this.setState((prevState: ModalRootState): ModalRootState => {
 				const modals: Modal[] = prevState.modals.filter((modal: Modal): boolean => {
-					return (modal.modalId !== modalId);
+					if (modal.modalId === modalId) {
+						try {
+							if (typeof(modal.onClose) !== "undefined") {
+								modal.onClose();
+							}
+						} catch(err) {
+							console.error(err);
+						}
+						return false;
+					}
+					return true;
 				});
 				return { ...prevState, modals };
 			}, resolve);
@@ -310,7 +319,7 @@ class ModalRoot extends Component<ModalRootProps, ModalRootState> {
 					...prevState,
 					bgOpacity: "0.6",
 					modals: [ ...prevState.modals, newModal ]
-				}
+				};
 			}, resolve);
 		});
 		await wait(1);

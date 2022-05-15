@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Button, { ButtonExtProps } from "@components/basic/Button";
 import ButtonIcon from "@components/basic/ButtonIcon";
-import { ChildProps, ModalOptions } from "./ModalRoot";
+import { ChildProps } from "./ModalRoot";
 
 interface ContentHTML {
 	html: string;
@@ -42,16 +42,16 @@ const ActionModal: FunctionComponent<ActionModalProps> = function(props: ActionM
 	const rbOnClick = ((typeof(props.rightButtonProps) !== "undefined") && (typeof(props.rightButtonProps.onClick) !== "undefined")) ? props.rightButtonProps.onClick : (() => {});
 	leftButtonProps.onClick = function(e) {
 		return Promise.resolve(lbOnClick(e))
-		.then(closeModal)
-		.catch(console.error);
+			.then(closeModal)
+			.catch(console.error);
 	};
 	rightButtonProps.onClick = function(e) {
 		return Promise.resolve(rbOnClick(e))
-		.then(closeModal)
-		.catch(console.error);
+			.then(closeModal)
+			.catch(console.error);
 	};
 	return (
-		<div className="flex flex-col bg-primary-50 rounded">
+		<div className="flex flex-col bg-primary-50 rounded w-11/12 sm:w-10/12 md:w-8/12 lg:w-7/12 xl:w-6/12">
 			<div className="w-100 relative flex flex-row justify-end items-center px-3 pt-2 pb-3">
 				{(typeof(header) === "string") ? (
 					<p className="grow translate-x-1/2 right-1/2 absolute text-center font-bold text-lg truncate">

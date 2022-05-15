@@ -1,16 +1,16 @@
 import { PageIds } from "@components/App/routes";
 
-export interface NavLink {
+export interface Navlink {
 	name: string;
 	linkId: string;
 	pageId?: string;
 	script?: () => Promise<void>;
 	requiresLogin: boolean;
 	requiresLogout: boolean;
-	children?: NavLink[];
+	children?: Navlink[];
 }
 
-export const navLinks: NavLink[] = [
+export const navlinks: Navlink[] = [
 	{
 		name: "Home",
 		linkId: PageIds.HOME,
@@ -43,23 +43,23 @@ export const navLinks: NavLink[] = [
 	}
 ];
 
-const nested: NavLink[] = [
+const nested: Navlink[] = [
 	{
 		name: "With Grand Children",
 		linkId: "WITH_GRAND_CHILDREN",
 		requiresLogin: false,
 		requiresLogout: false,
-		children: navLinks.filter(({ linkId }) => (!(linkId === "WITH_CHILDREN")))
+		children: navlinks.filter(({ linkId }) => (!(linkId === "WITH_CHILDREN")))
 	},
-	...navLinks.filter(({ linkId }) => (!(linkId === "WITH_CHILDREN")))
+	...navlinks.filter(({ linkId }) => (!(linkId === "WITH_CHILDREN")))
 ];
 
-for (let i: number = 0; i < navLinks.length; i++) {
-	const navLink: NavLink = navLinks[i];
-	if (Array.isArray(navLink.children) && navLink.children.length && ((typeof(navLink.script) === "function") || (typeof(navLink.pageId) === "string"))) {
-		throw `navLink with linkId ${navLink.linkId} is both clickable and has children`;
+for (let i: number = 0; i < navlinks.length; i++) {
+	const navlink: Navlink = navlinks[i];
+	if (Array.isArray(navlink.children) && navlink.children.length && ((typeof(navlink.script) === "function") || (typeof(navlink.pageId) === "string"))) {
+		throw `navlink with linkId ${navlink.linkId} is both clickable and has children`;
 	}
-	if (navLink.linkId === "WITH_CHILDREN") {
-		navLinks[i].children = nested;
+	if (navlink.linkId === "WITH_CHILDREN") {
+		navlinks[i].children = nested;
 	}
 }

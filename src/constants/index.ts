@@ -1,4 +1,11 @@
 export const PAGE_ANIM_DURATION: number = 500;
 export const COLOR_PRIMARY: string = "#A52A2A";
-export const MOBILE_MAX_WIDTH: number = 720;
+export const MOBILE_MAX_WIDTH: number = 640;
 export const MODAL_ANIM_DURATION: number = 300;
+export const HH_FACTOR_DESKTOP: number = 0.09;
+export const HH_FACTOR_MOBILE: number = 0.08;
+export const MAX_HEADER_HEIGHT: number = 90;
+export const REF_WIDTH_MOBILE: number = 390;
+export const REF_WIDTH_DESKTOP: number = 1440;
+export const REF_HEIGHT_MOBILE: number = 750;
+export const REF_HEIGHT_DESKTOP: number = 820;

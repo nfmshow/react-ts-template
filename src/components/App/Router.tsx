@@ -8,7 +8,12 @@ import runtimeVars, { Location } from "@utils/runtimeVars";
 import history from "@utils/history";
 import usePrevious from "@utils/usePrevious";
 import { initialMiscData, StateTree } from "@redux/initialState";
-import { PAGE_ANIM_DURATION } from "@constants/index";
+import {
+	PAGE_ANIM_DURATION,
+	HH_FACTOR_DESKTOP,
+	HH_FACTOR_MOBILE,
+	MAX_HEADER_HEIGHT
+} from "@constants/index";
 
 interface RouterBodyExtProps {
 	
@@ -17,13 +22,17 @@ interface RouterBodyExtProps {
 interface RouterBodyReduxProps {
 	animDirection: string;
 	animEnabled: boolean;
+	windowHeight: number;
+	mobileView: boolean;
 }
 
 function mapStateToProps(state: StateTree): RouterBodyReduxProps {
-	const { misc: { pageAnimDirection: animDirection, pageAnimEnabled: animEnabled } } = state;
+	const { misc: { pageAnimDirection: animDirection, pageAnimEnabled: animEnabled, windowHeight, mobileView } } = state;
 	return {
 		animDirection: (typeof(animDirection) === "undefined") ? initialMiscData.pageAnimDirection : animDirection,
-		animEnabled: (typeof(animEnabled) === "undefined") ? initialMiscData.pageAnimEnabled : animEnabled
+		animEnabled: (typeof(animEnabled) === "undefined") ? initialMiscData.pageAnimEnabled : animEnabled,
+		windowHeight: (typeof(windowHeight) === "undefined") ? 0 : windowHeight,
+		mobileView: (typeof(mobileView) === "undefined") ? true : mobileView
 	};
 }
 
@@ -32,7 +41,7 @@ const connector = connect(mapStateToProps);
 type RouterBodyProps = ConnectedProps<typeof connector> & RouterBodyExtProps;
 
 const RouterBody: ComponentType<RouterBodyProps> = function(props: RouterBodyProps) {
-	const { animDirection, animEnabled } = props;
+	const { animDirection, animEnabled, mobileView, windowHeight } = props;
 	const navigate = useNavigate();
 	const location: Location = useLocation();
 	runtimeVars.navigate = navigate;
@@ -42,6 +51,12 @@ const RouterBody: ComponentType<RouterBodyProps> = function(props: RouterBodyPro
 	const animKeyRef = useRef<string>(location.key);
 	const prevLocationKey = usePrevious<string>(location.key);
 	const prevAnimEnabled = usePrevious<boolean>(animEnabled);
+	const paddingTop: number = Math.min(MAX_HEADER_HEIGHT, mobileView ? (HH_FACTOR_MOBILE*windowHeight) : (HH_FACTOR_DESKTOP*windowHeight));
+	const height: number = windowHeight - paddingTop;
+	const containerStyle: Record<string, string> = {
+		paddingTop: `${paddingTop}px`,
+		height: `${height}px`
+	};
 	if ((prevAnimEnabled !== animEnabled) && !animEnabled) {
 		animatingRef.current = false;
 	}
@@ -65,26 +80,28 @@ const RouterBody: ComponentType<RouterBodyProps> = function(props: RouterBodyPro
 		}
 	}, [location.key]);
 	return (
-		<TransitionGroup component={null}>
-			<CSSTransition /* @ts-expect-error Type 'Element' is not assignable to type 'TransitionChildren' */ key={animKeyRef.current} classNames={`move-${(animDirection === "FORWARD") ? "ltr" : "rtl"}`} timeout={PAGE_ANIM_DURATION}>
-				<Routes location={location}>
-					{pages.map((page: Page) => {
-						return (
-							<Route path={page.path} key={page.pageId}
-								element={
-									<RTLoader config={{
-										loaderId: page.pageId,
-										task: page.loaderTask
-									}}
-									key={page.pageId}
-									/>
-								}
-							/>
-						);
-					})}
-				</Routes>
-			</CSSTransition>
-		</TransitionGroup>
+		<div className="w-full" style={containerStyle}>
+			<TransitionGroup component={null}>
+				<CSSTransition /* @ts-expect-error Type 'Element' is not assignable to type 'TransitionChildren' */ key={animKeyRef.current} classNames={`move-${(animDirection === "FORWARD") ? "ltr" : "rtl"}`} timeout={PAGE_ANIM_DURATION}>
+					<Routes location={location}>
+						{pages.map((page: Page) => {
+							return (
+								<Route path={page.path} key={page.pageId}
+									element={
+										<RTLoader config={{
+											loaderId: page.pageId,
+											task: page.loaderTask
+										}}
+										key={page.pageId}
+										/>
+									}
+								/>
+							);
+						})}
+					</Routes>
+				</CSSTransition>
+			</TransitionGroup>
+		</div>
 	);
 };
 

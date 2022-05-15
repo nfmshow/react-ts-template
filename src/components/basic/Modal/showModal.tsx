@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import ActionModal, { ActionModalExtProps } from "./ActionModal";
 import { showModal as fireModal, ChildProps, ModalOptions } from "./ModalRoot";
 import randomNumber from "@utils/randomNumber";
@@ -27,7 +27,7 @@ interface ShowModalParamsC<ModalProps> extends Omit<ModalOptions, "modalId"> {
 	props: ModalProps;
 }
 
-type ShowModalParams<ModalProps = {}> = ShowModalParamsA | ShowModalParamsC<ModalProps> | ShowModalParamsI;
+type ShowModalParams<ModalProps = ChildProps> = ShowModalParamsA | ShowModalParamsC<ModalProps> | ShowModalParamsI;
 
 function isActionModal(params: ShowModalParams<{}>): params is ShowModalParamsA {
 	return (params.type === "ACTION");
@@ -41,7 +41,7 @@ function isCustomModal<ModalProps = {}>(params: ShowModalParams<ModalProps>): pa
 	return (params.type === "CUSTOM");
 }
 
-export default async function showModal<ModalProps = {}>(params: ShowModalParams<ModalProps>): Promise<void> {
+export default async function showModal<ModalProps = ChildProps>(params: ShowModalParams<ModalProps>): Promise<void> {
 	const modalOptions: ModalOptions = {
 		modalId: randomNumber(8),
 		component: () => (<></>)
@@ -64,6 +64,9 @@ export default async function showModal<ModalProps = {}>(params: ShowModalParams
 	if (typeof(params.enterAnimDesktop) !== "undefined") {
 		modalOptions.enterAnimDesktop = params.enterAnimDesktop;
 	}
+	if (typeof(params.onClose) !== "undefined") {
+		modalOptions.onClose = params.onClose;
+	}
 	if (isActionModal(params)) {
 		const props: ActionModalExtProps = {
 			header: params.header,
@@ -80,11 +83,11 @@ export default async function showModal<ModalProps = {}>(params: ShowModalParams
 		}
 		modalOptions.component = function(rootChildProps: ChildProps) {
 			return <ActionModal { ...props } { ...rootChildProps } />;
-		}
+		};
 	} else if (isCustomModal<ModalProps>(params)) {
 		modalOptions.component = function(rootChildProps: ChildProps) {
-			return <params.component { ...params.props } { ...rootChildProps } />;
-		}
+			return <params.component { ...rootChildProps } { ...params.props } />;
+		};
 	} else {
 		throw "Info modal type is not allowed for now.";
 	}

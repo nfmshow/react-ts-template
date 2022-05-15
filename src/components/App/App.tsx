@@ -4,6 +4,7 @@ import { RATypes, RAMiscData } from "@redux/actions";
 import store, { dispatch } from "@redux/store";
 import Router from "./Router";
 import { ModalRoot } from "@components/basic/Modal";
+import Header from "@components/basic/Header";
 import getDebouncer, { Debouncer } from "@utils/getDebouncer";
 import getWindowSize from "@utils/getWindowSize";
 
@@ -42,6 +43,7 @@ export default class App extends Component<AppProps> {
 	
 	componentDidMount() {
 		window.rootLoader.hide();
+		document.body.classList.add("bg-primary-50");
 		this.onWindowSizeChange();
 		window.addEventListener("resize", this.onWindowSizeChange);
 	}
@@ -50,23 +52,23 @@ export default class App extends Component<AppProps> {
 		const twccBg = this.props.twccBg  || "bg-primary-50";
 		return(
 			<Provider store={store}>
-				<div className={`flex flex-col w-full h-full ${twccBg}`}>
+				<div className={`flex flex-col relative w-full h-full overflow-hidden ${twccBg}`}>
 					<div className="w-full toaster z-50">
 						
 					</div>
 					<div className="w-full fixed modal z-40">
 						<ModalRoot />
 					</div>
-					<div className="w-full header grow-0 z-30">
-						
+					<div className="w-full header absolute grow-0 z-30">
+						<Header />
 					</div>
-					<div className="w-full grow body">
+					<div className="w-full body grow">
 						<Router />
 					</div>
-					<div className="w-full grow-0 footer">
+					<div className="w-full grow-0 footer overflow-hidden">
 						
 					</div>
-					<div className="w-full grow-0 mobile-footer-tab z-20">
+					<div className="w-full grow-0 mobile-footer-tab z-20 overflow-hidden">
 						
 					</div>
 				</div>

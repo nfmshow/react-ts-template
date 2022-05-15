@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useEffect } from "react";
 import Button from "@components/basic/Button";
 import ButtonIcon from "@components/basic/ButtonIcon";
+import Image from "@components/basic/Image";
 import { PageIds } from "@pages/index";
 import { showModal, ModalHorzAlign, ModalVertAlign, ModalEnterAnim } from "@components/basic/Modal";
 
@@ -25,7 +26,7 @@ function fireModal(): void {
 
 const Test: FunctionComponent = function() {
 	return (
-		<div className="w-full p-8">
+		<div className="w-full h-full p-8 overflow-y-auto">
 			<div className="p-2">
 				<Button icon="icon-home-alt" twAnimHover={"hover:animate-bounce-small"} 
 					scale={1} text={"To Home"} link={PageIds.HOME}
@@ -43,6 +44,7 @@ const Test: FunctionComponent = function() {
 					link={PageIds.HOME}
 				/>
 			</div>
+			<div style={{ height: "1500px", width: "200px" }}></div>
 		</div>
 	);
 };

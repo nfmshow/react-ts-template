@@ -74,8 +74,11 @@ type ButtonProps = ConnectedProps<typeof connector> & ButtonExtProps;
 
 const Button: FunctionComponent<ButtonProps> = function(props: ButtonProps) {
 	const rippleRef = useCustomRef<RippleRef>({});
-	function onClick(e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void {
+	function showRipple(e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void {
 		rippleRef.current!.show!(e);
+	}
+	function onClick(e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void {
+		showRipple(e);
 		if (typeof(props.link) !== "undefined") {
 			onLinkClick(props.link);
 			return;
@@ -161,7 +164,7 @@ const Button: FunctionComponent<ButtonProps> = function(props: ButtonProps) {
 	}
 	return (
 		<AnyElement tagName={element} onClick={onClick} className={outerContainerClass}
-			style={outerContainerStyle}
+			style={outerContainerStyle} onMouseEnter={showRipple} onMouseMove={showRipple}
 		>
 			<Ripple customRef={rippleRef} width={rippleWidth} height={rippleHeight}
 				scale={rippleSizeScale} twccBg={twccBgRipple} element="span"

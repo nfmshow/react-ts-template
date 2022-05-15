@@ -1,0 +1,1 @@
+export { default, ImageExtProps, ScaleType } from "./Image";
